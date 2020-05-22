@@ -9,5 +9,6 @@
       <Canvas fx:id="canvas" height="520.0" width="480.0" />
       <Label fx:id="score" layoutX="31.0" layoutY="24.0" text="Score:" />
       <Label fx:id="timer" layoutX="414.0" layoutY="24.0" text="Time:" />
+      <Button layoutX="209.0" layoutY="11.0" mnemonicParsing="false" onAction="#restart" text="Restart" />
    </children>
 </Pane>

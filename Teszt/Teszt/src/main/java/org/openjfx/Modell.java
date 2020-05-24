@@ -1,6 +1,7 @@
 package org.openjfx;
 
 import java.util.Random;
+import org.tinylog.Logger;
 
 public class Modell {
 
@@ -13,22 +14,23 @@ public class Modell {
     boolean[][] bombs = new boolean[12][12];
     boolean[][] revealed = new boolean[12][12];
     boolean[][] flagged = new boolean[12][12];
-    public String username;
+
     int score = 0;
+    public static int spacing = 4;
 
 
-
+    /**
+     * This method randomly generate the places of the bombs.
+     */
     public void generateBombs() {
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
-                System.out.println(i + " " + j);
+              //  System.out.println(i + " " + j);
 
                 bombs[i][j] = false;
                 revealed[i][j] = false;
                 flagged[i][j] = false;
-
-            }
-            }
+            }}
 
             Random randX = new Random();
             Random randY = new Random();
@@ -43,25 +45,69 @@ public class Modell {
                    counter++;
                }
            }while(counter != 10);
-            System.out.println(counter);
 
+            Logger.info("Bombs generating!");
         }
 
 
 
-    public boolean IsThereAbomb(int mx,int my){
+    public boolean bombValue(int mx,int my){
 
         return bombs[mx][my];
     }
 
     /**
-     *  This method define
-     * @param x
-     * @param y
-     * @return
+     * @param mx The x coordinate of the mouse.
+     * @param my The y coordinate of the mouse.
+     * @return return The <code>row</code> where we clicked with the mouse.
      */
 
-    int neighbournumber(int x, int y) {
+
+    public int inboxX(int mx, int my) {
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 12; j++) {
+                if ((mx >= spacing + i * 40 - 2) && (mx < spacing + i * 40 + 40 - spacing) &&
+                        (my >= spacing + j * 40 + 40) && (my < j * 40 + 80 - spacing)) {
+
+                    return i;
+                }
+            }
+        }Logger.info(" Defining the row's serial number");
+
+        return -1;
+    }
+    /**
+     * @param mx The x coordinate of the mouse.
+     * @param my The y coordinate of the mouse.
+     * @return The column where we clicked with the mouse.
+     */
+    public int inboxY(int mx, int my) {
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 12; j++) {
+                if ((mx >= spacing + i * 40 - 2) && (mx < spacing + i * 40 + 40 - spacing) &&
+                        (my >= spacing + j * 40 + 40) && (my < j * 40 + 80 - spacing)) {
+
+                    return j;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+
+
+
+
+
+    /**
+     *  This method define how many bombs has the field's neighbours.
+     * @param x Serial number of the row.
+     * @param y Serial number of the column.
+     * @return The number of the bombs.
+     */
+
+    int neighbourNumber(int x, int y) {
         int i = 0;
         if (x == 0 && y == 11) {
             if (bombs[x][y - 1])
@@ -154,8 +200,10 @@ public class Modell {
                 i++;
             if (bombs[x + 1][y + 1])
                 i++;
+
         }
         return i;
+
     }
 
     public boolean getRevealed(int x, int y) {

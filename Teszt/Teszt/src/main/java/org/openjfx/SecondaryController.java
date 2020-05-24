@@ -5,12 +5,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
-
 import java.net.URL;
 import java.util.ResourceBundle;
+import org.tinylog.Logger;
 
 public class SecondaryController implements Initializable {
 
+    GameView gameView;
+    Modell modell;
     @FXML
     private Label score;
     @FXML
@@ -22,18 +24,10 @@ public class SecondaryController implements Initializable {
     public void restart() {
         modell = new Modell();
         modell.score = 0;
-        gameView.Restart();
+        gameView.gameRestart();
         gameView.setText(modell.getScore());
 
     }
-
-    public void restartIfWon() {
-
-
-    }
-
-    GameView gameView;
-    Modell modell;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -52,52 +46,81 @@ public class SecondaryController implements Initializable {
         });
     }
 
+    /**
+     * This method turns up the field where we click with a left mouse button.
+     * If the field hide a bomb than the method draw all of the bombs and we get a pop-up message which is tell that we lost.
+     * If we close the message window, we will get a new chance for win. (game reset).
+     * But if we turns up every field except bombs, we will get a pop-up  message which is tell that we won.
+     * @param x The field's row number.
+     * @param y The field's column number.
+     */
     private void handlePrimaryClick(double x, double y) {
 
         gameView.gc.setFill(Color.WHITE);
-        if (gameView.inboxX((int) x, (int) y) != -1 && gameView.inboxY((int) x, (int) y) != -1 && !modell.getRevealed(gameView.inboxX((int) x, (int) y), gameView.inboxY((int) x, (int) y))) {
-            if (modell.IsThereAbomb(gameView.inboxX((int) x, (int) y), gameView.inboxY((int) x, (int) y))) {
+        if (modell.inboxX((int) x, (int) y) != -1 && modell.inboxY((int) x, (int) y) != -1 &&
+                !modell.getRevealed(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y))) {
+            if (modell.bombValue(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y))) {
                 for (int i = 0; i < 12; i++)
                     for (int j = 0; j < 12; j++)
-                        if (modell.IsThereAbomb(i, j)) {
+                        if (modell.bombValue(i, j)) {
                             gameView.drawRedSquare(i, j);
                         }
-                gameView.ShowAlertLose();
+                gameView.showAlertLose();
+
                 gameView.stopTimer();
                 restart();
             } else {
-                gameView.gc.fillRect(GameView.spacing + gameView.inboxX((int) x, (int) y) * 40 - 2, GameView.spacing + gameView.inboxY((int) x, (int) y) * 40 + 40, 40 - GameView.spacing, 40 - GameView.spacing);
-                neighbour(gameView.inboxX((int) x, (int) y), gameView.inboxY((int) x, (int) y));
+                gameView.gc.fillRect(GameView.spacing + modell.inboxX((int) x, (int) y) * 40 - 2,
+                        GameView.spacing + modell.inboxY((int) x, (int) y) * 40 + 40, 40 - GameView.spacing, 40 - GameView.spacing);
+                neighbour(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y));
                 gameView.setText(modell.getScore());
+
                 if (modell.getScore() == 268) {
-                    gameView.ShowAlertWin();
+                    gameView.showAlertWin();
+
                     restart();
                 }
             }
         }
     }
 
+    /**
+     * This method take care of the right mouse button.
+     * If we click to the field which is not revealed and there is no flag on it,then put down one flag
+     * If the field already has a flag then the click will pick it up.
+     * @param x The field's row number.
+     * @param y The field's column number.
+     */
     private void handleSecondaryClick(double x, double y) {
-        if (gameView.inboxX((int) x, (int) y) != -1 && gameView.inboxY((int) x, (int) y) != -1 &&
-                !modell.getRevealed(gameView.inboxX((int) x, (int) y), gameView.inboxY((int) x, (int) y)) &&
-                !modell.getFlagged(gameView.inboxX((int) x, (int) y), gameView.inboxY((int) x, (int) y))) {
-            gameView.drawFlag(gameView.inboxX((int) x, (int) y), gameView.inboxY((int) x, (int) y));
-            modell.setFlagged(gameView.inboxX((int) x, (int) y), gameView.inboxY((int) x, (int) y), true);
+        if (modell.inboxX((int) x, (int) y) != -1 && modell.inboxY((int) x, (int) y) != -1 &&
+                !modell.getRevealed(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y)) &&
+                !modell.getFlagged(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y))) {
+            gameView.drawFlag(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y));
+            Logger.info("Placing the flag");
+            modell.setFlagged(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y), true);
 
-        } else if (gameView.inboxX((int) x, (int) y) != -1 && gameView.inboxY((int) x, (int) y) != -1 &&
-                !modell.getRevealed(gameView.inboxX((int) x, (int) y), gameView.inboxY((int) x, (int) y)) &&
-                modell.getFlagged(gameView.inboxX((int) x, (int) y), gameView.inboxY((int) x, (int) y))) {
-            modell.setFlagged(gameView.inboxX((int) x, (int) y), gameView.inboxY((int) x, (int) y), false);
-            gameView.getFlag(gameView.inboxX((int) x, (int) y), gameView.inboxY((int) x, (int) y));
+        } else if (modell.inboxX((int) x, (int) y) != -1 && modell.inboxY((int) x, (int) y) != -1 &&
+                !modell.getRevealed(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y)) &&
+                modell.getFlagged(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y))) {
+            modell.setFlagged(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y), false);
+            gameView.getFlag(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y));
 
         }
 
     }
 
+    /**
+     *This method firstly get the number of adjacent bombs.
+     *Flip the field and draw the number of the bomb with a proper colour but only if there is at least one bomb.
+     *If there is no bomb (number=0) then flip the fields until we do not find a field which has a neighbour with bomb
+     * and then the method draw the number of the bomb with a proper colour.
+     * @param x The field's row number.
+     * @param y The field's column number.
+     */
     public void neighbour(int x, int y) {
 
 
-        int number = modell.neighbournumber(x, y);
+        int number = modell.neighbourNumber(x, y);
         if (number > 0) {
             switch (number) {
                 case 1:
@@ -130,17 +153,17 @@ public class SecondaryController implements Initializable {
 
             if (modell.getRevealed(x, y) == false) {
 
-                gameView.DrawRevealed(x, y);
-                gameView.DrawNeighbour(number, x, y);
+                gameView.drawRevealed(x, y);
+                gameView.drawNeighbourBombs(number, x, y);
                 modell.setRevealed(x, y);
                 modell.setScore(2);
 
             }
         } else {
-            while (number == 0 && modell.getRevealed(x, y) == false) {
+            while (number == 0 && !modell.getRevealed(x, y)) {
 
                 modell.setRevealed(x, y);
-                gameView.DrawRevealed(x, y);
+                gameView.drawRevealed(x, y);
                 modell.setScore(2);
 
                 if (x == 0 && y == 11) {

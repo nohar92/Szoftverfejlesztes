@@ -18,7 +18,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        this.stage = stage;
+        App.stage = stage;
         scene = new Scene(loadFXML("primary"));
         stage.setScene(scene);
         stage.setTitle("Minesweeper");
@@ -27,8 +27,8 @@ public class App extends Application {
 
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
+    static void setRoot() throws IOException {
+        scene.setRoot(loadFXML("secondary"));
         stage.sizeToScene();
     }
 

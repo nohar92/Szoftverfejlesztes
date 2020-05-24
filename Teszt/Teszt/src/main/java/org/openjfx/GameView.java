@@ -1,6 +1,5 @@
 package org.openjfx;
 
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.canvas.Canvas;
@@ -10,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 public class GameView {
 
@@ -18,18 +18,18 @@ public class GameView {
     public static Image bomb;
     public static Image flag;
 
-     static {
-        bomb = new Image(GameView.class.getResourceAsStream("bomba.png"));
-        flag = new Image(GameView.class.getResourceAsStream("flag.png"));
+    static {
+        bomb = new Image(GameView.class.getResourceAsStream("bomb.png"));
+        flag = new Image(GameView.class.getResourceAsStream("flag2.png"));
     }
 
     public GraphicsContext gc;
+    Alert alertWin = new Alert(Alert.AlertType.WARNING);
+    Alert alertLose = new Alert(Alert.AlertType.WARNING);
     private int seconds = 0;
     private Timeline time;
     private Label currentTime = new Label();
     private Label currentScore = new Label();
-    Alert alert = new Alert(Alert.AlertType.WARNING);
-    Alert alertwin = new Alert(Alert.AlertType.WARNING);
 
 
     public GameView() {
@@ -37,10 +37,11 @@ public class GameView {
     }
 
     /**
-     * Set the gameboard
-     * @param score The Label where we write the score
-     * @param timer The Label where we write the time
-     * @param canvas The Canvas what we use as a gameboard
+     * Set the gameboard, set the pop-up window messages.
+     *
+     * @param score  The Label where we write the score.
+     * @param timer  The Label where we write the time.
+     * @param canvas The Canvas what we use as a gameboard.
      */
     public GameView(Label score, Label timer, Canvas canvas) {
 
@@ -49,18 +50,20 @@ public class GameView {
         currentScore = score;
         currentTime.setText("Time: 0");
         currentScore.setText("Score: 0");
-        alert.setTitle("Pop-up window!");
-        alert.setHeaderText("You lost!");
-        alert.setContentText("You clicked to the bomb field!");
-        alertwin.setTitle("Pop-up window!");
-        alertwin.setHeaderText("You won!");
-        alertwin.setContentText("Congratulations!");
+        alertLose.setTitle("Pop-up window!");
+        alertLose.setHeaderText("You clicked to the bomb field!");
+        alertLose.setContentText("You lost! Try again!");
+        alertWin.setTitle("Pop-up window!");
+        alertWin.setHeaderText("You won!");
+        alertWin.setContentText("Congratulations!");
         startTimer();
+
 
         gc = canvas.getGraphicsContext2D();
         gc.fillRect(0, 0, 640, 640);
         gc.setFill(Color.DARKGRAY);
         gc.setFill(Color.GRAY);
+        Logger.info("The board drawing");
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
                 gc.fillRect(spacing + i * 40 - 2, spacing + j * 40 + 40, 40 - spacing, 40 - spacing);
@@ -69,57 +72,23 @@ public class GameView {
 
     }
 
-    /**
-     * @param mx the x coordinate of the mouse
-     * @param my the y coordinate of the mouse
-     * @return return the row where we clicked with the mouse
-     */
-
-
-    public int inboxX(int mx, int my) {
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
-                if ((mx >= spacing + i * 40 - 2) && (mx < spacing + i * 40 + 40 - spacing) &&
-                        (my >= spacing + j * 40 + 40) && (my < j * 40 + 80 - spacing)) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
 
     /**
-     * @param mx the x coordinate of the mouse
-     * @param my the y coordinate of the mouse
-     * @return return the column where we clicked with the mouse
-     */
-    public int inboxY(int mx, int my) {
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
-                if ((mx >= spacing + i * 40 - 2) && (mx < spacing + i * 40 + 40 - spacing) &&
-                        (my >= spacing + j * 40 + 40) && (my < j * 40 + 80 - spacing)) {
-                    return j;
-                }
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * The squares where you click will turn red. (The bomb's place)
+     * Draw the bombs.
      *
-     * @param x the x coordinate of the bomb
-     * @param y the y coordinate of the bomb
+     * @param x The x coordinate of the bomb.
+     * @param y The y coordinate of the bomb.
      */
     public void drawRedSquare(int x, int y) {
         gc.setFill(Color.RED);
         gc.fillRect(spacing + x * 40 - 2, spacing + y * 40 + 40, 40 - spacing, 40 - spacing);
-        DrawBomb(x, y);
+        Logger.info( "Drawing the bombs");
+        drawBomb(x, y);
 
     }
 
     /**
-     * Set the number's colour which are show the number of the bombs what the square has as its neighbors
+     * Set the number's colour which are show the number of the bombs what the square has as its neighbors.
      */
 
     public void setGCBlue() {
@@ -156,58 +125,64 @@ public class GameView {
     }
 
     /**
-     * Draw the number of the bombs what the square has as its neighbors
+     * Draw the number of the bombs what the square has as its neighbors.
      *
-     * @param number The number of bombs
-     * @param x      Number of the row
-     * @param y      Number of the column
+     * @param number The number of bombs.
+     * @param x      Number of the row.
+     * @param y      Number of the column.
      */
-    public void DrawNeighbour(int number, int x, int y) {
+    public void drawNeighbourBombs(int number, int x, int y) {
         gc.strokeText(String.valueOf(number), spacing + x * 40 - 2 + 14, spacing + y * 40 + 40 + 23);
 
     }
 
     /**
-     * Set the colour for the square which are appear due to our clicking (turn the square)
+     * Set the colour for the square which are appear due to our clicking (flip the field).
      *
-     * @param x Number of the row
-     * @param y Number of the column
+     * @param x Number of the row.
+     * @param y Number of the column.
      */
-    public void DrawRevealed(int x, int y) {
+    public void drawRevealed(int x, int y) {
         gc.setFill(Color.WHITE);
         gc.fillRect(spacing + x * 40 - 2, spacing + y * 40 + 40, 40 - spacing, 40 - spacing);
 
     }
 
     /**
-     * Draw the bomb image to the square
+     * Draw the bomb image to the square.
      *
-     * @param x Number of the row
-     * @param y Number of the column
+     * @param x Number of the row.
+     * @param y Number of the column.
      */
-    public void DrawBomb(int x, int y) {
+    public void drawBomb(int x, int y) {
 
         gc.drawImage(bomb, spacing + x * 40 - 2, spacing + y * 40 + 40);
 
     }
 
     /**
-     * Draw the flag image to the square, what we get from x,y coordinates
+     * Draw the flag image to the square, what we get from x,y coordinates.
      *
-     * @param x Number of the row
-     * @param y Number of the column
+     * @param x Number of the row.
+     * @param y Number of the column.
      */
 
     public void drawFlag(int x, int y) {
-        gc.drawImage(flag, spacing + x * 40 - 2, spacing + y * 40 + 40 + 3);
+        gc.drawImage(flag, spacing + x * 40 - 2, spacing + y * 40 + 40);
 
     }
 
-
+    /**
+     * Picks up the flag.
+     *
+     * @param x Number of the row.
+     * @param y Number of the column.
+     */
 
     public void getFlag(int x, int y) {
         gc.setFill(Color.GRAY);
-        gc.fillRect(spacing + x * 40, spacing + y * 40 + 40, 40 - 2 * spacing, 40 - 2 * spacing);
+        gc.fillRect(spacing + x * 40-1, spacing + y * 40 + 40, 40 -  spacing-1, 40 - spacing);
+        Logger.info("Picking up the flag");
     }
 
 
@@ -218,7 +193,7 @@ public class GameView {
     }
 
     /**
-     * Implementation of the timer
+     * Implementation of the timer.
      */
     public void startTimer() {
 
@@ -230,49 +205,48 @@ public class GameView {
             currentTime.setText("Time: " + seconds);
         }));
         time.play();
-
     }
 
+    /**
+     *  Stop the timer.
+     */
     public void stopTimer() {
         time.stop();
-
     }
 
 
     /**
-     * Set the game
+     * Set the game to the starting state (game reset).
      */
-    public void Restart() {
+    public void gameRestart() {
 
-        gc.setFill(Color.DARKGRAY);
+      //  gc.setFill(Color.DARKGRAY);
         gc.setFill(Color.GRAY);
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
                 gc.fillRect(spacing + i * 40 - 2, spacing + j * 40 + 40, 40 - spacing, 40 - spacing);
             }
         }
-        stopTimer();
+     //   stopTimer();
         startTimer();
 
     }
 
-    public void setScore(int score1) {
-        currentScore.setText("Score: " + score1);
-    }
-
-    public int getSeconds() {
-        return seconds;
-    }
-
-    public void ShowAlertWin() {
+    /**
+     *  The alert window pops up if you win.
+     */
+    public void showAlertWin() {
         stopTimer();
-        alertwin.showAndWait();
+        alertWin.showAndWait();
 
     }
 
-    public void ShowAlertLose() {
+    /**
+     *  The alert window pops up if you lose.
+     */
+    public void showAlertLose() {
         stopTimer();
-        alert.showAndWait();
+        alertLose.showAndWait();
 
     }
 

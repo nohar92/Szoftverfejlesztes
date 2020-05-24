@@ -4,10 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="520" minWidth="360" prefHeight="520.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.openjfx.SecondaryController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="520" minWidth="360" prefHeight="520.0" prefWidth="480.0"
+      xmlns="http://javafx.com/javafx/10.0.2-internal"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.openjfx.SecondaryController">
    <children>
       <Canvas fx:id="canvas" height="520.0" width="480.0" />
       <Label fx:id="score" layoutX="31.0" layoutY="24.0" text="Score:" />
       <Label fx:id="timer" layoutX="414.0" layoutY="24.0" text="Time:" />
+      <Button layoutX="209.0" layoutY="11.0" mnemonicParsing="false" onAction="#restart" text="Restart" />
    </children>
 </Pane>

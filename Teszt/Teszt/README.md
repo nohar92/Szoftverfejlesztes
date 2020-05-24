@@ -6,22 +6,10 @@ Minesweeper
 
  
 
-Created on Linux, using Java 14.
+Created on Linux, using Java 11.
 
- 
 
-Run with the following commands, from the project's root directory:
-
-    mvn package
-
-    java -jar ./target/valami.jar
-
- 
-
- 
-
-Developers:
+Developer:
 
 -Norbert Harmati
 
--Roland Major

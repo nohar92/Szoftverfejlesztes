@@ -26,7 +26,7 @@ public class GameView {
     public GraphicsContext gc;
     Alert alertWin = new Alert(Alert.AlertType.WARNING);
     Alert alertLose = new Alert(Alert.AlertType.WARNING);
-    private int seconds = 0;
+    public int seconds = 0;
     private Timeline time;
     private Label currentTime = new Label();
     private Label currentScore = new Label();
@@ -61,7 +61,6 @@ public class GameView {
 
         gc = canvas.getGraphicsContext2D();
         gc.fillRect(0, 0, 640, 640);
-        gc.setFill(Color.DARKGRAY);
         gc.setFill(Color.GRAY);
         Logger.info("The board drawing");
         for (int i = 0; i < 12; i++) {
@@ -220,14 +219,14 @@ public class GameView {
      */
     public void gameRestart() {
 
-      //  gc.setFill(Color.DARKGRAY);
+
         gc.setFill(Color.GRAY);
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
                 gc.fillRect(spacing + i * 40 - 2, spacing + j * 40 + 40, 40 - spacing, 40 - spacing);
             }
         }
-     //   stopTimer();
+        stopTimer();
         startTimer();
 
     }

@@ -1,15 +1,15 @@
 package org.openjfx;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.util.Random;
+
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import org.tinylog.Logger;
 
 public class Modell {
-
-
-    public Modell(){
-
-        generateBombs();
-    }
 
     boolean[][] bombs = new boolean[12][12];
     boolean[][] revealed = new boolean[12][12];
@@ -18,6 +18,69 @@ public class Modell {
     int score = 0;
     public static int spacing = 4;
 
+    int max_score = 268;
+    int max_bombs = 10;
+    public Rekords rekords = new Rekords();
+    String filename = "records.json";
+    public Gson gson = new Gson();
+    FileOutputStream outputStream;
+
+    /**
+     * This method a rekordok objektum time,score és username listájához adja a paraméterként kapott értékeket.
+     * @param timeinsecond The time in seconds
+     * @param score  The player's score.
+     * @param username The player's name.
+     */
+
+    public void addToRecords(int timeinsecond, int score, String username){
+        rekords.time.add(timeinsecond);
+        rekords.score.add(score);
+        rekords.username.add(username);
+    }
+
+    /**
+     * This method write to records.json file.
+     */
+
+    public void write(){
+
+
+        String s = gson.toJson(rekords);
+
+        try {
+            outputStream = new FileOutputStream("records.json");
+            outputStream.write(s.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *This method read from filename file.
+     */
+    public void read(){
+        try {
+            JsonReader reader = new JsonReader(new FileReader(filename));
+            rekords = gson.fromJson(reader,Rekords.class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public Modell(){
+
+        generateBombs();
+    }
+
+    /**
+     *If the player's score is equal with the max_score then
+     * @return true
+     */
+    public boolean doYouWin(){
+
+        return max_score == score;
+    }
 
     /**
      * This method randomly generate the places of the bombs.
@@ -31,7 +94,6 @@ public class Modell {
                 revealed[i][j] = false;
                 flagged[i][j] = false;
             }}
-
             Random randX = new Random();
             Random randY = new Random();
 
@@ -94,11 +156,6 @@ public class Modell {
 
         return -1;
     }
-
-
-
-
-
 
     /**
      *  This method define how many bombs has the field's neighbours.
@@ -225,6 +282,15 @@ public class Modell {
     public int getScore() { return score; }
 
     public void setScore(int score) { this.score += score; }
+
+    public boolean getBombs(int i, int j) {
+        return bombs[i][j];
+    }
+
+    public void restart() {
+        generateBombs();
+
+    }
 }
 
 

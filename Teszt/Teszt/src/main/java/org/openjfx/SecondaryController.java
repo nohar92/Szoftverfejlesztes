@@ -12,20 +12,22 @@ import org.tinylog.Logger;
 public class SecondaryController implements Initializable {
 
     GameView gameView;
-    Modell modell;
+    Modell modell  = new Modell();
     @FXML
     private Label score;
     @FXML
     private Label timer;
     @FXML
     private Canvas canvas;
+    public String username;
 
     @FXML
     public void restart() {
-        modell = new Modell();
+
         modell.score = 0;
         gameView.gameRestart();
         gameView.setText(modell.getScore());
+        modell.restart();
 
     }
 
@@ -34,6 +36,7 @@ public class SecondaryController implements Initializable {
 
         modell = new Modell();
         gameView = new GameView(score, timer, canvas);
+        modell.read();
         canvas.setOnMouseClicked(mouseEvent -> {
             switch (mouseEvent.getButton()) {
                 case PRIMARY:
@@ -51,8 +54,8 @@ public class SecondaryController implements Initializable {
      * If the field hide a bomb than the method draw all of the bombs and we get a pop-up message which is tell that we lost.
      * If we close the message window, we will get a new chance for win. (game reset).
      * But if we turns up every field except bombs, we will get a pop-up  message which is tell that we won.
-     * @param x The field's row number.
-     * @param y The field's column number.
+     * @param x The x coordinate where we clicked.
+     * @param y The y coordinate where we clicked.
      */
     private void handlePrimaryClick(double x, double y) {
 
@@ -65,8 +68,9 @@ public class SecondaryController implements Initializable {
                         if (modell.bombValue(i, j)) {
                             gameView.drawRedSquare(i, j);
                         }
+                modell.addToRecords(gameView.seconds,modell.getScore(),PrimaryController.user);
+                modell.write();
                 gameView.showAlertLose();
-
                 gameView.stopTimer();
                 restart();
             } else {
@@ -75,8 +79,11 @@ public class SecondaryController implements Initializable {
                 neighbour(modell.inboxX((int) x, (int) y), modell.inboxY((int) x, (int) y));
                 gameView.setText(modell.getScore());
 
-                if (modell.getScore() == 268) {
+                if (modell.doYouWin()) {
+                    modell.addToRecords(gameView.seconds,modell.getScore(),PrimaryController.user);
+                    modell.write();
                     gameView.showAlertWin();
+
 
                     restart();
                 }
@@ -88,8 +95,9 @@ public class SecondaryController implements Initializable {
      * This method take care of the right mouse button.
      * If we click to the field which is not revealed and there is no flag on it,then put down one flag
      * If the field already has a flag then the click will pick it up.
-     * @param x The field's row number.
-     * @param y The field's column number.
+     * (-1)
+     * @param x The x coordinate where we clicked.
+     * @param y The y coordinate where we clicked.
      */
     private void handleSecondaryClick(double x, double y) {
         if (modell.inboxX((int) x, (int) y) != -1 && modell.inboxY((int) x, (int) y) != -1 &&
@@ -233,6 +241,5 @@ public class SecondaryController implements Initializable {
         }
 
     }
-
 
 }

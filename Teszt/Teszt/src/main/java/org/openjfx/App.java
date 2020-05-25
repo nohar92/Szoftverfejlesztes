@@ -29,6 +29,7 @@ public class App extends Application {
 
     static void setRoot() throws IOException {
         scene.setRoot(loadFXML("secondary"));
+
         stage.sizeToScene();
     }
 

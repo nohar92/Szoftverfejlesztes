@@ -1,4 +1,5 @@
-[{"id":1,"name":"Bulbasaur","img":"http://image-api.nosalty.hu/nosalty/images/recipes/Ok/ZZ/bubbles-and-squeak-angol-reggeli.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=58927f2067e09eb6f87a0d0eaf4bec38"},
+[{"id":1,"name":"Bulbasaur",
+  "img":"http://image-api.nosalty.hu/nosalty/images/recipes/Ok/ZZ/bubbles-and-squeak-angol-reggeli.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=58927f2067e09eb6f87a0d0eaf4bec38"},
 {"id":13,"name":"Weedle","img":"http://www.serebii.net/pokemongo/pokemon/013.png"},
 {"id":3,"name":"Venusaur","img":"http://www.serebii.net/pokemongo/pokemon/003.png"},
 {"id":9,"name":"Blastoise","img":"http://www.serebii.net/pokemongo/pokemon/009.png"},

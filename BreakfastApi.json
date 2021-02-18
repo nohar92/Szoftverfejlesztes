@@ -1,0 +1,52 @@
+[
+  {
+    "id": "breakfast",
+    "foodname": "Mosolygós reggeli",
+    "img": "https://image-api.nosalty.hu/nosalty/images/recipes/PJ/Aw/mosolygos-reggeli.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=84ae8f75d74eee2b4d28387f1198fb67"
+  },
+  {
+    "id": "breakfast",
+    "foodname": "Gyümölcsrizs",
+    "img": "https://image-api.nosalty.hu/nosalty/images/recipes/P5/FY/gyumolcsrizs.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=f57e05482e2f57c2740078941fa757cc"
+  },
+  {
+    "id": "breakfast",
+    "foodname": "Avokádó reggelire",
+    "img": "https://image-api.nosalty.hu/nosalty/images/recipes/pL/VQ/avokado-reggelire.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=5735ac8c205d5d8019beb9551b56e51c"
+  },
+  {
+    "id": "breakfast",
+    "foodname": "Meggyes zabkása",
+    "img": "https://image-api.nosalty.hu/nosalty/images/recipes/AB/lL/meggyes-zabkasa.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=c949680680cae8c2737b45da85abc221"
+  },
+  {
+    "id": "breakfast",
+    "foodname": "Bubbles and squeak",
+    "img": "https://image-api.nosalty.hu/nosalty/images/recipes/Ok/ZZ/bubbles-and-squeak-angol-reggeli.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=58927f2067e09eb6f87a0d0eaf4bec38"
+  },
+  {
+    "id": "breakfast",
+    "foodname": "Zöldséges-darált húsos reggeli",
+    "img": "https://image-api.nosalty.hu/nosalty/images/recipes/k0/Z2/zoldseges-daralt-husos-reggeli.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=e6814ef6769dd5899a743d58a7f11e66"
+  },
+  {
+    "id": "breakfast",
+    "foodname": "Reggeli pite tojással és baconnel",
+    "img": "https://image-api.nosalty.hu/nosalty/images/recipes/FZ/bP/reggeli-pite-tojassal-baconnel.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=ec6dce3e33be0669880f1e53dc526dd2"
+  },
+  {
+    "id": "breakfast",
+    "foodname": "Villámgyors low-carb reggeli",
+    "img": "https://image-api.nosalty.hu/nosalty/images/recipes/iY/C6/villamgyors-low-carb-reggeli.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=b965d8a2dca7663633912d2eb1e8bed7"
+  },
+  {
+    "id": "breakfast",
+    "foodname": "Almás-zabpelyhes amerikai palacsinta",
+    "img": "https://image-api.nosalty.hu/nosalty/images/recipes/bC/WD/almas-zabpelyhes-amerikai-palacsinta.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=114923931ed42069d964913d6047e5e4"
+  },
+  {
+    "id": "breakfast",
+    "foodname": "Gyömbéres tejbezab áfonyával",
+    "img": "https://image-api.nosalty.hu/nosalty/images/recipes/nn/Pd/gyomberes-tejbezab-afonyaval.jpeg?mark=watermark.png&markpos=bottom-left&markpad=20&s=d11df670b8d2f238250b15acf8a50ad7"
+  }
+]
